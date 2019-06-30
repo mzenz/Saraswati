@@ -49,6 +49,10 @@ float Note::frequency() const {
 	return std::exp2f((key() - 81) / 12.f) * 440.f;
 }
 
+int Note::operator-(const Note& other) const {
+	return _key - other._key;
+}
+
 std::ostream& operator<<(std::ostream& s, const Note& note) {
 	s << _notes[note.note()] << note.octave();
 	return s;

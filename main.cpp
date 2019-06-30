@@ -47,8 +47,16 @@ void printAllNotes() {
 	cout << endl;
 }
 
+// the intervals between several notes
+void printSomeIntervals() {
+	cout << "Interval between C3 and Db5 = " << Db5 - C3 << endl;
+	cout << "Interval between C-2 and G8 = " << G8 - C_2 << endl;
+	cout << "Interval between G8 and C-2 = " << C_2 - G8 << endl;
+}
+
 int main(int argc, char* argv[]) {
-//	printMajorScale(0);
-//	printFrequenciesOfAllMidiNotes();
+	printMajorScale(0);
+	printFrequenciesOfAllMidiNotes();
 	printAllNotes();
+	printSomeIntervals();
 }

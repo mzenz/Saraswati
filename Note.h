@@ -20,6 +20,9 @@ struct Note {
 	/// Returns note's frequency in Hertz
 	float frequency() const;
 
+	/// Returns the interval between this and another note
+	int operator-(const Note& other) const;
+
 	/// Transposes note by a given interval
 	Note& operator+=(int interval);
 
