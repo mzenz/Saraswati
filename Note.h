@@ -1,7 +1,17 @@
 #include <cstdint>
 #include <ostream>
+#include <vector>
 
 struct Note {
+	/// Returns the lowest note that's possible to encode
+	static const Note& min();
+
+	/// Returns the highest note that's possible to encode
+	static const Note& max();
+
+	/// Returns a note that is closest to a given frequency
+	static Note fromFrequency(float frequency);
+
 	/// Default c'tor. Initializes Note as A4 (a.k.a. "concert A")
 	Note(uint8_t key = 81);
 
@@ -22,6 +32,12 @@ struct Note {
 
 	/// Returns the interval between this and another note
 	int operator-(const Note& other) const;
+
+	/// Returns the interval between this and another note
+	int operator==(const Note& other) const { return _key == other._key; }
+
+	/// Returns a list of notes representing the major scale for this note
+	std::vector<Note> majorScale() const;
 
 	/// Transposes note by a given interval
 	Note& operator+=(int interval);
@@ -44,7 +60,7 @@ private:
 
 std::ostream& operator<<(std::ostream& s, const Note& note);
 
-// Constant notes
+// Predefined notes
 static const Note C_2(0);
 static const Note Db_2(1);
 static const Note D_2(2);
