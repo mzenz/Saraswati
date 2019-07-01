@@ -2,6 +2,7 @@
 #include <ostream>
 #include <vector>
 
+/// A MIDI note
 struct Note {
 	/// Returns the lowest note that's possible to encode
 	static const Note& min();
@@ -29,6 +30,12 @@ struct Note {
 
 	/// Returns note's frequency in Hertz
 	float frequency() const;
+
+	/// Returns note's period in seconds
+	float period() const;
+
+	/// Returns note's wave length in meters
+	float waveLength() const;
 
 	/// Returns the interval between this and another note
 	int operator-(const Note& other) const;

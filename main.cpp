@@ -84,10 +84,20 @@ void frequencyToNote() {
 	}
 }
 
+void waveLength() {
+	Note n = C4;
+	cout << "Note\tPeriod\t\tWavelength" << endl << endl;
+	for (auto i = 0; i < 12; ++i) {
+		cout << n << "\t" << n.period() << " s\t" << n.waveLength() << endl;
+		++n;
+	}
+}
+
 int main(int argc, char* argv[]) {
 	majorScale();
 	printFrequenciesOfAllMidiNotes();
 //	printAllNotes();
 //	printSomeIntervals();
 //	frequencyToNote();
+	waveLength();
 }
