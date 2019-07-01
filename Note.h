@@ -34,7 +34,8 @@ struct Note {
 	/// Returns note's period in seconds
 	float period() const;
 
-	/// Returns note's wave length in meters
+	/// Returns note's wave length in meters,
+	/// assuming the speed of sound is 343 m/s
 	float waveLength() const;
 
 	/// Returns the interval between this and another note
