@@ -70,6 +70,7 @@ void frequencyToNote() {
 		{    40.f, Eb1  },
 		{    41.f, E1   },
 		{    50.f, G1   },
+		{   400.f, G4   },
 		{   666.f, E5   },
 		{  1200.f, D6   },
 		{  6000.f, Gb8  },
