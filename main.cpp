@@ -4,6 +4,7 @@
 // Created with cpp_boot.py
 // Martin Zenzerovich
 #include "Note.h"
+#include "Scale.h"
 #include <iostream>
 #include <vector>
 #include <cassert>
@@ -11,8 +12,7 @@
 using namespace std;
 
 // Given a note, print its major scale
-void majorScale()
-{
+void majorScale() {
 	// major scales
 	const std::vector<Note> scaleC { C_2, D_2, E_2, F_2, G_2, A_2, B_2 };
 	const std::vector<Note> scaleD { D0, E0, Gb0, G0, A0, B0, Db1 };
@@ -23,16 +23,15 @@ void majorScale()
 	const std::vector<Note> scaleB { B5, Db6, Eb6, E6, Gb6, Ab6, Bb6 };
 	const std::vector<Note> scaleD8 { D8, E8, Gb8, G8 };
 
-	assert(scaleC == C_2.majorScale());
-	assert(scaleD ==  D0.majorScale());
-	assert(scaleE ==  E1.majorScale());
-	assert(scaleF ==  F2.majorScale());
-	assert(scaleG ==  G3.majorScale());
-	assert(scaleA ==  A4.majorScale());
-	assert(scaleB ==  B5.majorScale());
-	
+	assert(scaleC == majorScale(C_2));
+	assert(scaleD == majorScale(D0));
+	assert(scaleE == majorScale(E1));
+	assert(scaleF == majorScale(F2));
+	assert(scaleG == majorScale(G3));
+	assert(scaleA == majorScale(A4));
+	assert(scaleB == majorScale(B5));
 	// test for scales that fall out of the playable note range (i.e. > 127)
-	assert(scaleD8 ==  D8.majorScale());
+	assert(scaleD8 == majorScale(D8));
 }
 
 // for each note print the MIDI keys and frequency

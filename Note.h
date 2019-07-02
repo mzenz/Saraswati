@@ -1,6 +1,7 @@
+#pragma once
+
 #include <cstdint>
 #include <ostream>
-#include <vector>
 
 /// A MIDI note
 struct Note {
@@ -43,9 +44,6 @@ struct Note {
 
 	/// Returns the interval between this and another note
 	int operator==(const Note& other) const { return _key == other._key; }
-
-	/// Returns a list of notes representing the major scale for this note
-	std::vector<Note> majorScale() const;
 
 	/// Transposes note by a given interval
 	Note& operator+=(int interval);

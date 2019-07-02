@@ -1,4 +1,3 @@
-//#include <algorithm>
 #include "Note.h"
 #include <cmath>
 #include <algorithm>
@@ -33,30 +32,6 @@ Note Note::fromFrequency(float frequency) {
 		key = clamp<long>(std::lroundf(12 * std::log2f(frequency / C_2_FREQUENCY)), 0, 127);
 	}
 	return Note(key);
-}
-
-std::vector<Note> Note::majorScale() const {
-	std::vector<Note> scale;
-	Note n = *this;
-	for (auto i = 0; i < 7; ++i) {
-		scale.push_back(n);
-		
-		// stop iterating if we are at
-		// the highest possible note
-		if (n == Note::max()) {
-			break;
-		}
-
-		switch(i) {
-			case 2:
-			case 6:
-			++n;
-			break;
-		default:
-			n += 2;
-		}
-	}
-	return scale;
 }
 
 Note::Note(uint8_t key) {
