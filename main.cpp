@@ -5,6 +5,7 @@
 // Martin Zenzerovich
 #include "Note.h"
 #include "Scale.h"
+#include "Synthesis.h"
 #include <iostream>
 #include <vector>
 #include <cassert>
@@ -99,4 +100,5 @@ int main(int argc, char* argv[]) {
 //	printSomeIntervals();
 //	frequencyToNote();
 	waveLength();
+	sineWave(cout, 1, 10, SAMPLE_RATE_48K);
 }
