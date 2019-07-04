@@ -1,12 +1,12 @@
-
 .DS_Store
 
 CMakeCache.txt
 CMakeFiles
 CMakeScripts/
 cmake_install.cmake
-midi_to_freq.build
+*.build
 Debug
 Release
+build
 
-midi_to_freq.xcodeproj
+*.xcodeproj

@@ -1,8 +1,3 @@
-
-// Project: midi_to_freq
-//
-// Created with cpp_boot.py
-// Martin Zenzerovich
 #include "Note.h"
 #include "Scale.h"
 #include "Synthesis.h"
@@ -11,6 +6,7 @@
 #include <cassert>
 
 using namespace std;
+using namespace mk;
 
 // Given a note, print its major scale
 void majorScale() {
@@ -64,12 +60,12 @@ void printSomeIntervals() {
 void frequencyToNote() {
 	std::vector<std::pair<float, Note>> frequencies {
 		{   -10.f, C_2  },
-		{     2.f, C_2  },
-		{     4.f, C_2  },
-		{     5.f, Eb_2 },
-		{    40.f, Eb1  },
-		{    41.f, E1   },
-		{    50.f, G1   },
+		{	 2.f, C_2  },
+		{	 4.f, C_2  },
+		{	 5.f, Eb_2 },
+		{	40.f, Eb1  },
+		{	41.f, E1   },
+		{	50.f, G1   },
 		{   400.f, G4   },
 		{   666.f, E5   },
 		{  1200.f, D6   },

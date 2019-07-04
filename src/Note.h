@@ -1,9 +1,11 @@
 #pragma once
 
 #include <cstdint>
-#include <ostream>
+#include <iosfwd>
 
-/// A MIDI note
+namespace mk {
+
+/// A MIDI note based on the chromatic scale, tuned with A4 @ 440Hz
 struct Note {
 	/// Returns the lowest note that's possible to encode
 	static const Note& min();
@@ -19,7 +21,7 @@ struct Note {
 
 	/// Returns MIDI key code
 	uint8_t key() const { return _key;}
-	
+
 	/// Returns the note's octave
 	int octave() const { return _key / 12 - 2; };
 
@@ -195,3 +197,5 @@ static const Note E8(124);
 static const Note F8(125);
 static const Note Gb8(126);
 static const Note G8(127);
+
+} // namespace mk

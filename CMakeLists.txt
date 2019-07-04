@@ -1,16 +1,15 @@
-
 cmake_minimum_required(VERSION 3.0)
 
-project(midi_to_freq)
+project(muse)
 
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(main
-	main.cpp
-	Note.h
-	Note.cpp
-	Scale.h
-	Scale.cpp
-	Synthesis.h
-	Synthesis.cpp
+	src/main.cpp
+	src/Note.h
+	src/Note.cpp
+	src/Scale.h
+	src/Scale.cpp
+	src/Synthesis.h
+	src/Synthesis.cpp
 )

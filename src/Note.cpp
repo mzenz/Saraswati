@@ -1,6 +1,7 @@
 #include "Note.h"
 #include <cmath>
 #include <algorithm>
+#include <ostream>
 
 namespace {
 
@@ -16,6 +17,8 @@ template<class T>
 T clamp(T n, T min, T max) { return std::min(std::max(n, min), max); }
 
 }
+
+namespace mk {
 
 const Note& Note::min() {
 	return C_2;
@@ -87,3 +90,5 @@ std::ostream& operator<<(std::ostream& s, const Note& note) {
 	s << _notes[note.note()] << note.octave();
 	return s;
 }
+
+} // namespace mk
