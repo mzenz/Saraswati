@@ -12,4 +12,6 @@ add_executable(main
 	src/Scale.cpp
 	src/Synthesis.h
 	src/Synthesis.cpp
+	src/IEEEExtended.h
+	src/IEEEExtended.cpp
 )

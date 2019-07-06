@@ -1,6 +1,7 @@
 #include "Note.h"
 #include "Scale.h"
 #include "Synthesis.h"
+#include "IEEEExtended.h"
 #include <iostream>
 #include <vector>
 #include <cassert>
@@ -89,12 +90,21 @@ void waveLength() {
 	}
 }
 
+void doubleToExtended() {
+	double values[] { 22050., 44100., 48000., 96000., 192000. };
+	for (auto v : values) {
+		IeeeExtended n(v);
+		cout << v << " = " << n.toString() << endl;
+	}
+}
+
 int main(int argc, char* argv[]) {
 	majorScale();
 	printFrequenciesOfAllMidiNotes();
-//	printAllNotes();
-//	printSomeIntervals();
-//	frequencyToNote();
+	printAllNotes();
+	printSomeIntervals();
+	frequencyToNote();
 	waveLength();
 	sineWave(cout, 1, 10, SAMPLE_RATE_48K);
+	doubleToExtended();
 }

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cmake -G Xcode
+cmake -G Xcode && xcodebuild -project muse.xcodeproj
