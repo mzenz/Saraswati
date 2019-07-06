@@ -65,6 +65,10 @@ void doubleToIeeeExtended(double num, char* bytes)
 namespace mk {
 
 IeeeExtended::IeeeExtended(double n) {
+	*this = n;
+}
+
+void IeeeExtended::operator=(double n) {
 	doubleToIeeeExtended(n, reinterpret_cast<char*>(_buff));
 }
 

@@ -8,7 +8,9 @@ namespace mk {
 struct IeeeExtended {
 	uint8_t _buff[10];
 
-	IeeeExtended(double n);
+	IeeeExtended(double n = 0);
+
+	void operator=(double n);
 
 	std::string toString() const;
 };
