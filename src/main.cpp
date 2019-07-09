@@ -101,7 +101,7 @@ void doubleToExtended() {
 	};
 	for (auto v : values) {
 		IeeeExtended n(v);
-		cout << v << " = " << n.toString() << endl;
+		cout << v << " = 0x" << n.toString() << endl;
 	}
 }
 

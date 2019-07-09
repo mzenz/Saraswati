@@ -12,6 +12,8 @@ struct IeeeExtended {
 
 	void operator=(double n);
 
+	operator double() const;
+
 	std::string toString() const;
 };
 
