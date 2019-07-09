@@ -130,6 +130,5 @@ int main(int argc, char* argv[]) {
 	waveLength();
 	sineWave(cout, 1, 10, SAMPLE_RATE_48K);
 	doubleToExtended();
-	envelope(cout, 0, 1, 1.0, 1.0e-4, SAMPLE_RATE_48K);
 	exponentialEnvelopes();
 }
