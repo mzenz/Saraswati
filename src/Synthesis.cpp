@@ -43,7 +43,9 @@ void envelope(std::ostream& out,
 	if (duration <= 0 ||
 		duration > MAX_DURATION_SECONDS ||
 		sampleRate > SAMPLE_RATE_192K ||
-		sampleRate <= 0.0)
+		sampleRate <= 0.0 ||
+		startLevel <= 0 ||
+		endLevel <= 0 )
 		return;
 
 	const double samples = duration * sampleRate;
