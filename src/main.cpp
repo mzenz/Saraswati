@@ -91,7 +91,14 @@ void waveLength() {
 }
 
 void doubleToExtended() {
-	double values[] { 22050., 44100., 48000., 96000., 192000. };
+	double values[] {
+		0.,
+		22050.,
+		44100.,
+		48000.,
+		96000.,
+		192000.
+	};
 	for (auto v : values) {
 		IeeeExtended n(v);
 		cout << v << " = " << n.toString() << endl;
@@ -107,4 +114,5 @@ int main(int argc, char* argv[]) {
 	waveLength();
 	sineWave(cout, 1, 10, SAMPLE_RATE_48K);
 	doubleToExtended();
+	envelope(cout, 0, 1, 1.0, 1.0e-4, SAMPLE_RATE_48K);
 }
