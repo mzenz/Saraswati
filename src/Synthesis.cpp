@@ -1,5 +1,5 @@
 #include "Synthesis.h"
-#include <ostream>
+#include <iostream>
 #include <cmath>
 
 namespace {
@@ -32,35 +32,50 @@ void sineWave(std::ostream& out, double duration, double frequency, double sampl
 	}
 }
 
-void envelope(std::ostream& out,
-			  double startTime,
-			  double endTime,
-			  double startLevel,
-			  double endLevel,
-			  double sampleRate)
+void exponentialEnvelope(std::ostream& out,
+						 double startTime,
+						 double endTime,
+						 double startLevel,
+						 double endLevel,
+						 double sampleRate)
 {
 	const auto duration = endTime - startTime;
 	if (duration <= 0 ||
 		duration > MAX_DURATION_SECONDS ||
 		sampleRate > SAMPLE_RATE_192K ||
-		sampleRate <= 0.0 ||
-		startLevel <= 0 ||
-		endLevel <= 0 )
+		sampleRate <= 0.0)
 		return;
+
+	if (startLevel == endLevel) {
+		std::cerr << "Warning: start level and end level are the same" << std::endl;
+	}
 
 	const double samples = duration * sampleRate;
 	const double dt = 1.0 / sampleRate;
+	const double max = ::abs(endLevel - startLevel) + SILENCE;
 
-	// k = (min / max)^(1 / r * dT)
-	double k = ::pow(endLevel / startLevel, 1.0 / samples);
-	auto level = startLevel;
-	for (double t = startTime; t < endTime; t += dt) {
-		out << t;
-		out << "\t";
-		out << level;
-		out << std::endl;
+	double level, ratio;
+	if (startLevel > endLevel) {
+		// decay envelope: start from maximum level
+		level = max;
+		ratio = SILENCE / max;
+	}
+	else {
+		// attack envelope: start from minumum level (i.e. silence)
+		level = SILENCE;
+		ratio = max / SILENCE;
+	}
 
-		level *= k;
+	// avoid calling power function for each sample by calculating exponential factor (k)
+	const double k = ::pow(ratio, 1.0 / samples);
+	double t = startTime;
+	// offset values so that the minumum value coincides with the starting level
+	const double offset = std::min(startLevel, endLevel) - SILENCE;
+
+	// iterate samples + 1 times to cover entire sample range
+	const size_t sampleCount = ::ceil(samples);
+	for (size_t i = 0; i <= sampleCount; t += dt, ++i, level *= k) {
+		out << t << '\t' << level + offset << std::endl;
 	}
 }
 

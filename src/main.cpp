@@ -3,6 +3,7 @@
 #include "Synthesis.h"
 #include "IEEEExtended.h"
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <cassert>
 
@@ -105,6 +106,21 @@ void doubleToExtended() {
 	}
 }
 
+void exponentialEnvelopes() {
+	{
+		// decay envelope
+		std::ofstream o("decay.txt");
+		o.precision(std::numeric_limits<double>::max_digits10);
+		exponentialEnvelope(o, 0, 1, 1, -1, SAMPLE_RATE_22050);
+	}
+	{
+		// attack envelope
+		std::ofstream o("attack.txt");
+		o.precision(std::numeric_limits<double>::max_digits10);
+		exponentialEnvelope(o, 0, 1, -1, 1, SAMPLE_RATE_22050);
+	}
+}
+
 int main(int argc, char* argv[]) {
 	majorScale();
 	printFrequenciesOfAllMidiNotes();
@@ -115,4 +131,5 @@ int main(int argc, char* argv[]) {
 	sineWave(cout, 1, 10, SAMPLE_RATE_48K);
 	doubleToExtended();
 	envelope(cout, 0, 1, 1.0, 1.0e-4, SAMPLE_RATE_48K);
+	exponentialEnvelopes();
 }

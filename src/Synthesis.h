@@ -20,14 +20,16 @@ void sineWave(std::ostream& out,
 			  double frequency,
 			  double sampleRate);
 
-// prints out a general exponential envelope
-// if startLevel < endLevel => attack envelope
-// if startLevel > endLevel => decay envelope
-void envelope(std::ostream& out,
-			  double startTime,
-			  double endTime,
-			  double startLevel,
-			  double endLevel,
-			  double sampleRate);
+/// Prints out a general exponential envelope for the given time range
+/// where values increase or decrease from startLevel to endLevel.
+/// If startLevel < endLevel => attack envelope
+/// If startLevel > endLevel => decay envelope
+/// If startLevel == endLevel => constant envelope (i.e. no change)
+void exponentialEnvelope(std::ostream& out,
+						 double startTime,
+						 double endTime,
+						 double startLevel,
+						 double endLevel,
+						 double sampleRate);
 
 } // namespace mk
