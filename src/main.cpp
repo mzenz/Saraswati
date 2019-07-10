@@ -119,6 +119,15 @@ void exponentialEnvelopes() {
 		o.precision(std::numeric_limits<double>::max_digits10);
 		exponentialEnvelope(o, 0, 1, -1, 1, SAMPLE_RATE_22050);
 	}
+	{
+		// attack-decay envelope
+		std::ofstream o("ad.txt");
+		o.precision(std::numeric_limits<double>::max_digits10);
+
+		const auto sampleRate = 100.0;
+		exponentialEnvelope(o, 0.0, 0.3, 1.0e-4, 1.0, sampleRate);
+		exponentialEnvelope(o, 0.3, 2.0, 1.0, 1.0e-4, sampleRate);
+	}
 }
 
 int main(int argc, char* argv[]) {
