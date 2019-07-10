@@ -56,17 +56,16 @@ void exponentialEnvelope(std::ostream& out,
 
 	double level, ratio;
 	if (startLevel > endLevel) {
-		// decay envelope: start from maximum level
+		// decay envelope
 		level = max;
 		ratio = SILENCE / max;
 	}
 	else {
-		// attack envelope: start from minumum level (i.e. silence)
+		// attack envelope
 		level = SILENCE;
 		ratio = max / SILENCE;
 	}
 
-	// avoid calling power function for each sample by calculating exponential factor (k)
 	const double k = ::pow(ratio, 1.0 / samples);
 	double t = startTime;
 	// offset values so that the minumum value coincides with the starting level
