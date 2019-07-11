@@ -13,8 +13,6 @@ static const double SAMPLE_RATE_192K = 192000.0;
 
 static const double MAX_DURATION_SECONDS = 3600.0;
 
-float sampleSineWave(float time, float frequency);
-
 void sineWave(std::ostream& out,
 			  double duration,
 			  double frequency,

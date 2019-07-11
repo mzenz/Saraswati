@@ -12,10 +12,6 @@ constexpr double SILENCE = 1.0e-4; // ~-80dB
 
 namespace mk {
 
-float sampleSineWave(double time, double frequency) {
-	return ::sin(frequency * PIx2 * time);
-}
-
 void sineWave(std::ostream& out, double duration, double frequency, double sampleRate) {
 	if (duration <= 0 ||
 		duration > MAX_DURATION_SECONDS ||
@@ -27,7 +23,7 @@ void sineWave(std::ostream& out, double duration, double frequency, double sampl
 	for (double t = 0.0; t < duration; t += step) {
 		out << t;
 		out << "\t";
-		out << sampleSineWave(t, frequency);
+		out << ::sin(frequency * PIx2 * t);
 		out << std::endl;
 	}
 }
