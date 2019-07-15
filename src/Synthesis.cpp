@@ -1,4 +1,5 @@
 #include "Synthesis.h"
+#include "AIFF.h"
 #include <iostream>
 #include <cmath>
 
@@ -25,6 +26,21 @@ void sineWave(std::ostream& out, double duration, double frequency, double sampl
 		out << "\t";
 		out << ::sin(frequency * PIx2 * t);
 		out << std::endl;
+	}
+}
+
+void sineWave(AIFF& file, double duration, double frequency, double sampleRate) {
+	if (duration <= 0 ||
+		duration > MAX_DURATION_SECONDS ||
+		sampleRate > SAMPLE_RATE_192K ||
+		frequency < 0)
+		return;
+
+	const double dt = 1.0 / sampleRate;
+	for (double t = 0.0; t < duration; t += dt) {
+		for (auto i = 0; i < file.channels(); ++i) {
+			file << ::sin(frequency * PIx2 * t);
+		}
 	}
 }
 

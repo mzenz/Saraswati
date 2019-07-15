@@ -176,6 +176,13 @@ void writeAiffFromFile() {
 	}
 }
 
+void writeSineWaveToAIFF() {
+	const auto sampleRate = SAMPLE_RATE_48K;
+	mk::AIFF aiff("sine_440Hz@48KHz.aiff", BitDepth::BitDepth24, 1, sampleRate);
+
+	sineWave(aiff, 1.0, 440.0, sampleRate);
+}
+
 int main(int argc, char* argv[]) {
 	majorScale();
 	printFrequenciesOfAllMidiNotes();
@@ -187,4 +194,5 @@ int main(int argc, char* argv[]) {
 	doubleToExtended();
 	exponentialEnvelopes();
 	writeAiffFromFile();
+	writeSineWaveToAIFF();
 }

@@ -69,7 +69,7 @@ const char* ID_COMMON = "COMM";
 const char* ID_SSND = "SSND";
 
 constexpr size_t OFFSET_FORM_FILE_SIZE = 4;
-constexpr size_t OFFSET_COMM_SAMPLE_COUNT = 22;
+constexpr size_t OFFSET_COMM_FRAME_COUNT = 22;
 constexpr size_t OFFSET_SSND_CHUNK_SIZE = 42;
 
 void writeFORM(std::ostream& o)
@@ -117,10 +117,10 @@ namespace mk {
 AIFF::AIFF(const std::string& filePath, BitDepth bitDepth, uint16_t channels, double sampleRate)
 	: _f(filePath, std::ios::binary)
 	, _bitDepth(bitDepth)
-	, _sampleDepth(0)
 	, _channels(channels)
 	, _sampleRate(sampleRate)
-	, _frames(0)
+	, _sampleDepth(0)
+	, _samples(0)
 {
 	if (_f.bad()) {
 		std::cerr << "Failed to create AIFF file" << std::endl;
@@ -146,8 +146,15 @@ AIFF::AIFF(const std::string& filePath, BitDepth bitDepth, uint16_t channels, do
 	writeSSND(_f);
 }
 
-AIFF::~AIFF()
-{
+AIFF::~AIFF() {
+	// fill missing samples (if any) to complete final sample frame
+	if (_samples % _channels != 0) {
+		const uint8_t remainingSamples = _channels - (_samples % _channels);
+		for (size_t i = 0; i < channels() - remainingSamples; ++i) {
+			*this << 0.0;
+		}
+	}
+
 	// rewind stream and write remaining variable-length data
 
 	// since we're done appending samples, the current file position is the file's size
@@ -156,12 +163,12 @@ AIFF::~AIFF()
 	_f.seekp(OFFSET_FORM_FILE_SIZE);
 	_f.write(reinterpret_cast<const char*>(&fileSize), sizeof(fileSize));
 
-	_f.seekp(OFFSET_COMM_SAMPLE_COUNT);
-	const uint32_t frameCount = swapEndianness32(_frames);
+	_f.seekp(OFFSET_COMM_FRAME_COUNT);
+	const uint32_t frameCount = swapEndianness32(_samples / channels());
 	_f.write(reinterpret_cast<const char*>(&frameCount), sizeof(uint32_t));
 
 	_f.seekp(OFFSET_SSND_CHUNK_SIZE);
-	const uint32_t ssndChunkSize = swapEndianness32(_frames * _channels * _sampleDepth + 8);
+	const uint32_t ssndChunkSize = swapEndianness32(_samples * _channels * _sampleDepth + 8);
 	_f.write(reinterpret_cast<const char*>(&ssndChunkSize), sizeof(uint32_t));
 }
 
@@ -193,7 +200,7 @@ AIFF& AIFF::operator<<(double sample) {
 		default:
 			break;
 		}
-		++_frames;
+		++_samples;
 	}
 	return *this;
 }

@@ -27,11 +27,11 @@ public:
 private:
 	std::ofstream _f;
 
-	BitDepth _bitDepth;
+	const BitDepth _bitDepth;
+	const uint16_t _channels;
+	const double _sampleRate;
 	uint8_t _sampleDepth;
-	uint16_t _channels;
-	double _sampleRate;
-	uint32_t _frames;
+	uint32_t _samples;
 };
 
 } // namespace mk
