@@ -1,6 +1,7 @@
 #include "Note.h"
 #include "Scale.h"
 #include "Synthesis.h"
+#include "AIFF.h"
 #include "IEEEExtended.h"
 #include <iostream>
 #include <fstream>
@@ -130,6 +131,51 @@ void exponentialEnvelopes() {
 	}
 }
 
+void writeSineWaveFile()
+{
+	{
+		ofstream o("sine_10Hz@22050Hz.txt");
+		o.precision(std::numeric_limits<double>::max_digits10);
+		sineWave(o, 1, 10, SAMPLE_RATE_22050);
+	}
+	{
+		ofstream o("sine_50Hz@44.1KHz.txt");
+		o.precision(std::numeric_limits<double>::max_digits10);
+		sineWave(o, 1, 50, SAMPLE_RATE_44100);
+	}
+	{
+		ofstream o("sine_100Hz@48KHz.txt");
+		o.precision(std::numeric_limits<double>::max_digits10);
+		sineWave(o, 1, 100, SAMPLE_RATE_48K);
+	}
+}
+
+void writeAiffFromFile() {
+	const string fileName("sine_100Hz@48KHz");
+	auto bitDepth = BitDepth::BitDepth24;
+	const auto sampleRate = SAMPLE_RATE_48K;
+
+	ifstream f(fileName + ".txt");
+	if (!f.good()) {
+		cerr << "Failed to open file " << fileName << ".txt" << endl;
+		return;
+	}
+
+	mk::AIFF aiff(fileName + ".aif", bitDepth, 1, sampleRate);
+
+	constexpr size_t lineWidth = 80;
+	char line[lineWidth];
+	while (!f.eof()) {
+		f.getline(line, lineWidth);
+		const size_t lineLength = strlen(line);
+		for (size_t i = 0; i < lineLength; ++i) {
+			if (line[i] == '\t' && i < lineWidth) {
+				aiff << atof(&line[i]);
+			}
+		}
+	}
+}
+
 int main(int argc, char* argv[]) {
 	majorScale();
 	printFrequenciesOfAllMidiNotes();
@@ -140,4 +186,5 @@ int main(int argc, char* argv[]) {
 	sineWave(cout, 1, 10, SAMPLE_RATE_48K);
 	doubleToExtended();
 	exponentialEnvelopes();
+	writeAiffFromFile();
 }

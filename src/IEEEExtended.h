@@ -6,8 +6,6 @@
 namespace mk {
 
 struct IeeeExtended {
-	uint8_t _buff[10];
-
 	IeeeExtended(double n = 0);
 
 	void operator=(double n);
@@ -15,6 +13,13 @@ struct IeeeExtended {
 	operator double() const;
 
 	std::string toString() const;
+
+	const uint8_t* raw() const { return _buff; }
+
+	static constexpr size_t size = 10;
+
+private:
+	uint8_t _buff[size];
 };
 
 } // namespace mk

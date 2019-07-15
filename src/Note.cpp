@@ -1,6 +1,6 @@
 #include "Note.h"
+#include "Util.h"
 #include <cmath>
-#include <algorithm>
 #include <ostream>
 
 namespace {
@@ -12,9 +12,6 @@ const float C_2_FREQUENCY = 4.08789945782185f;
 
 // Speed of sound in meters per second
 const float SOUND_SPEED = 343.0f;
-
-template<class T>
-T clamp(T n, T min, T max) { return std::min(std::max(n, min), max); }
 
 }
 
