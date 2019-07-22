@@ -5,31 +5,64 @@
 
 namespace {
 
-constexpr float PI = 3.141592653589793f;
-constexpr float PIx2 = 2 * PI;
+constexpr float PI = 3.141592653589793;
+constexpr float PIx2 = 2.0 * PI;
 constexpr double SILENCE = 1.0e-4; // ~-80dB
+constexpr double MAX_DURATION_SECONDS = 3600.0;
 
 }
 
 namespace mk {
 
-void sineWave(std::ostream& out, double duration, double frequency, double sampleRate) {
+Sine::Sine(double frequency)
+	: _frequency(frequency)
+{
+}
+
+double Sine::operator()(double time) const {
+	return ::sin(_frequency * PIx2 * time);
+}
+
+ADEnvelope::ADEnvelope(double startLevel,
+					   double peakLevel,
+					   double endLevel,
+					   double attackDuration,
+					   double decayDuration)
+	: _startLevel(startLevel)
+	, _peakLevel(peakLevel)
+	, _endLevel(endLevel)
+	, _attackDuration(attackDuration)
+	, _decayDuration(decayDuration)
+{
+}
+
+double ADEnvelope::operator()(double time) const {
+	if (time <= 0)
+		return _startLevel;
+	if (time >= _attackDuration + _decayDuration)
+		return _endLevel;
+
+	return 0.0;
+}
+
+void sineWaveToTextFile(std::ostream& out, double duration, double frequency, double sampleRate) {
 	if (duration <= 0 ||
 		duration > MAX_DURATION_SECONDS ||
 		sampleRate > SAMPLE_RATE_192K ||
 		frequency < 0)
 		return;
 
+	Sine sine(frequency);
 	const double step = 1.0 / sampleRate;
 	for (double t = 0.0; t < duration; t += step) {
 		out << t;
 		out << "\t";
-		out << ::sin(frequency * PIx2 * t);
+		out << sine(t);
 		out << std::endl;
 	}
 }
 
-void sineWave(AIFF& file, double duration, double frequency, double sampleRate) {
+void sineWaveToAIFF(AIFF& file, double duration, double frequency, double sampleRate) {
 	if (duration <= 0 ||
 		duration > MAX_DURATION_SECONDS ||
 		sampleRate > SAMPLE_RATE_192K ||

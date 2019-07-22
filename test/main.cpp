@@ -136,17 +136,17 @@ void writeSineWaveFile()
 	{
 		ofstream o("sine_10Hz@22050Hz.txt");
 		o.precision(std::numeric_limits<double>::max_digits10);
-		sineWave(o, 1, 10, SAMPLE_RATE_22050);
+		sineWaveToTextFile(o, 1, 10, SAMPLE_RATE_22050);
 	}
 	{
 		ofstream o("sine_50Hz@44.1KHz.txt");
 		o.precision(std::numeric_limits<double>::max_digits10);
-		sineWave(o, 1, 50, SAMPLE_RATE_44100);
+		sineWaveToTextFile(o, 1, 50, SAMPLE_RATE_44100);
 	}
 	{
 		ofstream o("sine_100Hz@48KHz.txt");
 		o.precision(std::numeric_limits<double>::max_digits10);
-		sineWave(o, 1, 100, SAMPLE_RATE_48K);
+		sineWaveToTextFile(o, 1, 100, SAMPLE_RATE_48K);
 	}
 }
 
@@ -179,20 +179,19 @@ void writeAiffFromFile() {
 void writeSineWaveToAIFF() {
 	const auto sampleRate = SAMPLE_RATE_48K;
 	mk::AIFF aiff("sine_440Hz@48KHz.aiff", BitDepth::BitDepth24, 1, sampleRate);
-
-	sineWave(aiff, 1.0, 440.0, sampleRate);
+	sineWaveToAIFF(aiff, 1.0, 440.0, sampleRate);
 }
 
 int main(int argc, char* argv[]) {
-	majorScale();
-	printFrequenciesOfAllMidiNotes();
-	printAllNotes();
-	printSomeIntervals();
-	frequencyToNote();
-	waveLength();
-	sineWave(cout, 1, 10, SAMPLE_RATE_48K);
-	doubleToExtended();
-	exponentialEnvelopes();
-	writeAiffFromFile();
+//	majorScale();
+//	printFrequenciesOfAllMidiNotes();
+//	printAllNotes();
+//	printSomeIntervals();
+//	frequencyToNote();
+//	waveLength();
+//	doubleToExtended();
+//	exponentialEnvelopes();
+//	writeSineWaveFile();
+//	writeAiffFromFile();
 	writeSineWaveToAIFF();
 }

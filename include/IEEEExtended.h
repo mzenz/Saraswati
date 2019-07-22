@@ -5,6 +5,7 @@
 
 namespace mk {
 
+/// IEEE Extended floating-point scalar implementation (80 bit precision)
 struct IeeeExtended {
 	IeeeExtended(double n = 0);
 
