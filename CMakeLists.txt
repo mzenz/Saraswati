@@ -26,7 +26,25 @@ set(LIB_SOURCES src/Note.cpp
 				src/IEEEExtended.cpp
 )
 
+find_library(LIBSNDFILE
+    NAMES sndfile
+)
+
+if(LIBSNDFILE-NOTFOUND)
+message(FATAL_ERROR "libsndfile not found")
+endif()
+
+message(DEBUG "libsndfile = ${LIBSNDFILE}")
+
 add_library(muse ${LIB_HEADERS} ${LIB_SOURCES})
+
+# MUSE dependencies
+target_include_directories(muse
+	PRIVATE "/usr/local/include"
+)
+target_link_libraries(muse
+	PRIVATE ${LIBSNDFILE}
+)
 
 # Test program
 set(TEST_SOURCES test/main.cpp)
