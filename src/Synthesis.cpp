@@ -14,13 +14,27 @@ constexpr double MAX_DURATION_SECONDS = 3600.0;
 
 namespace mk {
 
-Sine::Sine(double frequency)
+SineWave::SineWave(double frequency)
 	: _frequency(frequency)
 {
 }
 
-double Sine::operator()(double time) const {
+double SineWave::operator()(double time) const {
 	return ::sin(_frequency * PIx2 * time);
+}
+
+SawWave::SawWave(double frequency)
+	: _frequency(frequency)
+	, _amplitude(1.0)
+	, _offset(0.0)
+	, _phase(0.0)
+	, _polarity(1.0)
+{
+}
+
+double SawWave::operator()(double time) const {
+	time = ::fmod(time, 1.0 / _frequency);
+	return _polarity * 2.0 * _amplitude * (_frequency * (time + _phase) - 0.5) + _offset;
 }
 
 ADEnvelope::ADEnvelope(double startLevel,
@@ -43,38 +57,6 @@ double ADEnvelope::operator()(double time) const {
 		return _endLevel;
 
 	return 0.0;
-}
-
-void sineWaveToTextFile(std::ostream& out, double duration, double frequency, double sampleRate) {
-	if (duration <= 0 ||
-		duration > MAX_DURATION_SECONDS ||
-		sampleRate > SAMPLE_RATE_192K ||
-		frequency < 0)
-		return;
-
-	Sine sine(frequency);
-	const double step = 1.0 / sampleRate;
-	for (double t = 0.0; t < duration; t += step) {
-		out << t;
-		out << "\t";
-		out << sine(t);
-		out << std::endl;
-	}
-}
-
-void sineWaveToAIFF(AIFF& file, double duration, double frequency, double sampleRate) {
-	if (duration <= 0 ||
-		duration > MAX_DURATION_SECONDS ||
-		sampleRate > SAMPLE_RATE_192K ||
-		frequency < 0)
-		return;
-
-	const double dt = 1.0 / sampleRate;
-	for (double t = 0.0; t < duration; t += dt) {
-		for (auto i = 0; i < file.channels(); ++i) {
-			file << ::sin(frequency * PIx2 * t);
-		}
-	}
 }
 
 void exponentialEnvelope(std::ostream& out,

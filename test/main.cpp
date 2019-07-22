@@ -131,67 +131,70 @@ void exponentialEnvelopes() {
 	}
 }
 
-void writeSineWaveFile()
+void writeSineWaveToFile()
 {
-	{
-		ofstream o("sine_10Hz@22050Hz.txt");
-		o.precision(std::numeric_limits<double>::max_digits10);
-		sineWaveToTextFile(o, 1, 10, SAMPLE_RATE_22050);
-	}
-	{
-		ofstream o("sine_50Hz@44.1KHz.txt");
-		o.precision(std::numeric_limits<double>::max_digits10);
-		sineWaveToTextFile(o, 1, 50, SAMPLE_RATE_44100);
-	}
-	{
-		ofstream o("sine_100Hz@48KHz.txt");
-		o.precision(std::numeric_limits<double>::max_digits10);
-		sineWaveToTextFile(o, 1, 100, SAMPLE_RATE_48K);
-	}
-}
+	ofstream o("plot/sine_10Hz@22050Hz.txt");
+	o.precision(std::numeric_limits<double>::max_digits10);
 
-void writeAiffFromFile() {
-	const string fileName("sine_100Hz@48KHz");
-	auto bitDepth = BitDepth::BitDepth24;
-	const auto sampleRate = SAMPLE_RATE_48K;
-
-	ifstream f(fileName + ".txt");
-	if (!f.good()) {
-		cerr << "Failed to open file " << fileName << ".txt" << endl;
-		return;
-	}
-
-	mk::AIFF aiff(fileName + ".aif", bitDepth, 1, sampleRate);
-
-	constexpr size_t lineWidth = 80;
-	char line[lineWidth];
-	while (!f.eof()) {
-		f.getline(line, lineWidth);
-		const size_t lineLength = strlen(line);
-		for (size_t i = 0; i < lineLength; ++i) {
-			if (line[i] == '\t' && i < lineWidth) {
-				aiff << atof(&line[i]);
-			}
-		}
+	SineWave sine(10.0);
+	const double step = 1.0 / SAMPLE_RATE_22050;
+	for (double t = 0.0; t < 1.0; t += step) {
+		o << t;
+		o << "\t";
+		o << sine(t);
+		o << std::endl;
 	}
 }
 
 void writeSineWaveToAIFF() {
 	const auto sampleRate = SAMPLE_RATE_48K;
-	mk::AIFF aiff("sine_440Hz@48KHz.aiff", BitDepth::BitDepth24, 1, sampleRate);
-	sineWaveToAIFF(aiff, 1.0, 440.0, sampleRate);
+	const double frequency = 440.0;
+	const auto channels = 1;
+	const double duration = 1.0;
+
+	mk::AIFF aiff("sine_440Hz@48KHz.aiff", BitDepth::BitDepth16, channels, sampleRate);
+
+	mk::SineWave sineWave(frequency);
+	const double dt = 1.0 / sampleRate;
+	for (double t = 0.0; t < duration; t += dt) {
+		aiff << sineWave(t);
+	}
+}
+
+void writeSawWaveToAIFF() {
+	const auto sampleRate = SAMPLE_RATE_48K;
+	const double frequency = 440.0;
+	const auto channels = 1;
+	const double duration = 1.0;
+
+	mk::SawWave sawWave(frequency);
+	mk::AIFF aiff("synthesis/ascending_saw_440Hz@48KHz.aif", BitDepth::BitDepth16, channels, sampleRate);
+	const double dt = 1.0 / sampleRate;
+	for (double t = 0.0; t < duration; t += dt) {
+		for (auto i = 0; i < aiff.channels(); ++i) {
+			aiff << sawWave(t);
+		}
+	}
+
+	sawWave._polarity = -1.0;
+	mk::AIFF aiff2("synthesis/descending_saw_440Hz@48KHz.aif", BitDepth::BitDepth16, duration, sampleRate);
+	for (double t = 0.0; t < duration; t += dt) {
+		for (auto i = 0; i < aiff.channels(); ++i) {
+			aiff2 << sawWave(t);
+		}
+	}
 }
 
 int main(int argc, char* argv[]) {
-//	majorScale();
-//	printFrequenciesOfAllMidiNotes();
-//	printAllNotes();
-//	printSomeIntervals();
-//	frequencyToNote();
-//	waveLength();
-//	doubleToExtended();
-//	exponentialEnvelopes();
-//	writeSineWaveFile();
-//	writeAiffFromFile();
+	majorScale();
+	printFrequenciesOfAllMidiNotes();
+	printAllNotes();
+	printSomeIntervals();
+	frequencyToNote();
+	waveLength();
+	doubleToExtended();
+	exponentialEnvelopes();
+	writeSineWaveToFile();
 	writeSineWaveToAIFF();
+	writeSawWaveToAIFF();
 }

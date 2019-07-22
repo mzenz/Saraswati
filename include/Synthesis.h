@@ -16,16 +16,28 @@ class AIFF;
 struct AudioModule {
 	virtual double operator()(double time) const = 0;
 
-	// perform module-specific parameter validation
+	// TODO: perform module-specific parameter validation
 //	virtual bool valid() const = 0;
 };
 
-struct Sine : public AudioModule {
-	Sine(double frequency);
+struct SineWave : public AudioModule {
+	SineWave(double frequency);
 
 	double operator()(double time) const override;
 
 	double _frequency;
+};
+
+struct SawWave : public AudioModule {
+	SawWave(double frequency);
+
+	double operator()(double time) const override;
+
+	double _frequency;
+	double _amplitude;
+	double _offset;
+	double _phase;
+	double _polarity;
 };
 
 struct ADEnvelope : public AudioModule {
@@ -40,12 +52,6 @@ struct ADEnvelope : public AudioModule {
 	double _attackDuration;
 	double _decayDuration;
 };
-
-// TODO: move to Util.h
-void sineWaveToTextFile(std::ostream& out, double duration, double frequency, double sampleRate);
-
-// TODO: move to Util.h
-void sineWaveToAIFF(AIFF& file, double duration, double frequency, double sampleRate);
 
 // TODO: move to Util.h
 /// Prints out a general exponential envelope for the given time range
