@@ -152,7 +152,7 @@ void writeSineWaveToAIFF() {
 	const auto channels = 1;
 	const double duration = 1.0;
 
-	mk::AIFF aiff("sine_440Hz@48KHz.aiff", BitDepth::BitDepth16, channels, sampleRate);
+	mk::AIFF aiff("synthesis/sine_440Hz@48KHz.aiff", BitDepth::BitDepth16, channels, sampleRate);
 
 	mk::SineWave sineWave(frequency);
 	const double dt = 1.0 / sampleRate;
@@ -166,8 +166,10 @@ void writeSawWaveToAIFF() {
 	const double frequency = 440.0;
 	const auto channels = 1;
 	const double duration = 1.0;
+	const double volume = .1;
 
 	mk::SawWave sawWave(frequency);
+	sawWave._amplitude = volume;
 	mk::AIFF aiff("synthesis/ascending_saw_440Hz@48KHz.aif", BitDepth::BitDepth16, channels, sampleRate);
 	const double dt = 1.0 / sampleRate;
 	for (double t = 0.0; t < duration; t += dt) {
