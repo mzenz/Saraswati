@@ -3,6 +3,7 @@
 #include "Synthesis.h"
 #include "AIFF.h"
 #include "IEEEExtended.h"
+#include "Util.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -187,6 +188,10 @@ void writeSawWaveToAIFF() {
 	}
 }
 
+void normalizeAudio() {
+	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized.aiff");
+}
+
 int main(int argc, char* argv[]) {
 	majorScale();
 	printFrequenciesOfAllMidiNotes();
@@ -199,4 +204,5 @@ int main(int argc, char* argv[]) {
 	writeSineWaveToFile();
 	writeSineWaveToAIFF();
 	writeSawWaveToAIFF();
+	normalizeAudio();
 }
