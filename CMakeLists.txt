@@ -64,3 +64,10 @@ add_executable(test ${TEST_SOURCES})
 add_dependencies(test ${MK_LIBRARY_NAME})
 
 target_link_libraries(test ${MK_LIBRARY_NAME})
+
+##################################################
+# Install targets
+##################################################
+
+install(TARGETS ${MK_LIBRARY_NAME} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE})
+install(TARGETS test DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
