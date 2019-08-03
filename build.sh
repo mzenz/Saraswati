@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./generate.sh && xcodebuild -project muse.xcodeproj
+./generate.sh && xcodebuild -project mk.xcodeproj
