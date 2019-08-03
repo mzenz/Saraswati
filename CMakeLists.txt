@@ -69,7 +69,7 @@ target_link_libraries(test ${MK_LIBRARY_NAME})
 # audio2Text utility program
 ##################################################
 
-add_executable(audio2Text utility/audio2Text.cpp)
+add_executable(audio2Text src/utility/audio2Text.cpp)
 
 add_dependencies(audio2Text ${MK_LIBRARY_NAME})
 
@@ -79,7 +79,7 @@ target_link_libraries(audio2Text ${MK_LIBRARY_NAME})
 # amplify utility program
 ##################################################
 
-add_executable(amplify utility/amplify.cpp)
+add_executable(amplify src/utility/amplify.cpp)
 
 add_dependencies(amplify ${MK_LIBRARY_NAME})
 
