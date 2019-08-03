@@ -66,8 +66,22 @@ add_dependencies(test ${MK_LIBRARY_NAME})
 target_link_libraries(test ${MK_LIBRARY_NAME})
 
 ##################################################
+# audio2Text utility program
+##################################################
+
+add_executable(audio2Text utility/audio2Text.cpp)
+
+add_dependencies(audio2Text ${MK_LIBRARY_NAME})
+
+target_link_libraries(audio2Text ${MK_LIBRARY_NAME})
+
+##################################################
 # Install targets
 ##################################################
 
+# Install Muzik library
 install(TARGETS ${MK_LIBRARY_NAME} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE})
+
+# Install binaries and utilities
 install(TARGETS test DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+install(TARGETS audio2Text DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
