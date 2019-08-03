@@ -11,12 +11,12 @@ namespace {
 
 namespace mk {
 
-float amplitude2dB(float amplitude) {
-	return 20.0 * ::log10f(clamp(::fabs(amplitude), 1.0e-4f, 1.0f));
+double amplitudeToLoudness(double amplitude) {
+	return 20.0 * ::log10f(clamp(::abs(amplitude), 1.0e-4, 1.0));
 }
 
-float dB2Amplitude(float loudness) {
-	return ::exp(clamp(loudness, std::numeric_limits<float>::min(), 0.0f) / 20.0f);
+double loudnessToAmplitude(double loudness) {
+	return pow(10.0, clamp(loudness, std::numeric_limits<double>::lowest(), 0.0) / 20.0);
 }
 
 SampleInfo::SampleInfo()
@@ -27,7 +27,7 @@ SampleInfo::SampleInfo()
 }
 
 double SampleInfo::loudness() const {
-	return amplitude2dB(amplitude);
+	return amplitudeToLoudness(amplitude);
 }
 
 void audioToText(const std::string& audioFilePath, const std::string& textFilePath) {
@@ -109,17 +109,32 @@ bool scanMax(const std::string& inputFilePath, SampleInfo& max) {
 	return true;
 }
 
-void normalize(const std::string& inputFilePath, const std::string& outputFilePath, float peakValue) {
+void normalize(const std::string& inputFilePath, const std::string& outputFilePath, float peakLoudness) {
 	if (inputFilePath == outputFilePath) {
 		std::cerr << "normalize(): Input and output file can't be the same: " << inputFilePath << std::endl;
 		return;
 	}
 
+	if (peakLoudness > 0.0) {
+		std::cerr << "normalize(): peak value is out of range: " << peakLoudness << ", max peak value is 0 dB" << std::endl;
+		return;
+	}
+
+	const float peakAmplitude = loudnessToAmplitude(peakLoudness);
+	if (std::isnan(peakAmplitude)) {
+		std::cerr << "normalize(): peak amplitude too small please" << std::endl;
+		return;
+	}
+
+	// get input file's peak amplitude
 	SampleInfo max;
 	if (!scanMax(inputFilePath, max)) {
 		std::cerr << "normalize(): Failed to scan input file: " << inputFilePath << std::endl;
 		return;
 	}
+
+	// calculate gain factor
+	const float gain = ::abs(peakAmplitude / max.amplitude);
 
 	// open input file 
 	SF_INFO info;
@@ -140,9 +155,6 @@ void normalize(const std::string& inputFilePath, const std::string& outputFilePa
 		sf_close(in);
 		return;
 	}
-
-	const float gain = 1.0 / max.amplitude;
-	std::cout << "normalize(): Gain = " << gain << std::endl;
 
 	std::vector<float> samples((size_t)channels);
 	for (sf_count_t i = 0; i < frames; ++i) {

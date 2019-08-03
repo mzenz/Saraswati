@@ -189,9 +189,16 @@ void writeSawWaveToAIFF() {
 }
 
 void normalizeAudio() {
-	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized.aiff");
-	mk::audioToText("reference/wu-tang_normalized.aiff", "reference/wu-tang_normalized.txt");
+	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_0dB.aiff");
+	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_-3dB.aiff", -3.0);
+	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_-12dB.aiff", -12.0);
+}
+
+void dumpAudioToText() {
 	mk::audioToText("reference/wu-tang.aiff", "reference/wu-tang.txt");
+	mk::audioToText("reference/wu-tang_normalized_0dB.aiff", "reference/wu-tang_normalized_0dB.txt");
+	mk::audioToText("reference/wu-tang_normalized_-3dB.aiff", "reference/wu-tang_normalized_-3dB.txt");
+	mk::audioToText("reference/wu-tang_normalized_-12dB.aiff", "reference/wu-tang_normalized_-12dB.txt");
 }
 
 void printMaxSample() {
@@ -220,4 +227,5 @@ int main(int argc, char* argv[]) {
 	writeSawWaveToAIFF();
 	normalizeAudio();
 	printMaxSample();
+	dumpAudioToText();
 }
