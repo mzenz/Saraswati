@@ -1,3 +1,5 @@
 #!/bin/bash
 
-./generate.sh && xcodebuild -project mk.xcodeproj
+./generate.sh && cd build; xcodebuild -project muzik.xcodeproj
+
+exit $?

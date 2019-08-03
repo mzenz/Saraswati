@@ -1,12 +1,18 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(mk)
+##################################################
+# Muzik project
+##################################################
+
+project(muzik)
 
 set(CMAKE_CXX_STANDARD 11)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# Library
+##################################################
+# Muzik library
+##################################################
 
 set(MK_LIBRARY_NAME  ${CMAKE_PROJECT_NAME})
 
@@ -37,8 +43,6 @@ if(LIBSNDFILE-NOTFOUND)
 message(FATAL_ERROR "libsndfile not found")
 endif()
 
-message(DEBUG "libsndfile = ${LIBSNDFILE}")
-
 add_library(${MK_LIBRARY_NAME} ${LIB_HEADERS} ${LIB_SOURCES})
 
 # Library dependencies
@@ -49,7 +53,10 @@ target_link_libraries(${MK_LIBRARY_NAME}
 	PRIVATE ${LIBSNDFILE}
 )
 
+##################################################
 # Test program
+##################################################
+
 set(TEST_SOURCES test/main.cpp)
 
 add_executable(test ${TEST_SOURCES})

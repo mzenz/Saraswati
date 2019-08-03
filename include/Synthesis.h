@@ -11,8 +11,6 @@ constexpr double SAMPLE_RATE_48K = 48000.0;
 constexpr double SAMPLE_RATE_96K = 96000.0;
 constexpr double SAMPLE_RATE_192K = 192000.0;
 
-class AIFF;
-
 struct AudioModule {
 	virtual double operator()(double time) const = 0;
 };

@@ -1,5 +1,6 @@
 #!/bin/bash
 
-cmake -G Xcode
+mkdir -p build
+cd build; cmake -G Xcode ..
 
 exit $?
