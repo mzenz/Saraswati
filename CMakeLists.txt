@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(muse)
+project(mk)
 
 set(CMAKE_CXX_STANDARD 11)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# MUSE library
+# Library
+
+set(MK_LIBRARY_NAME  ${CMAKE_PROJECT_NAME})
 
 # Headers
 set(LIB_HEADERS include/Endian.h
@@ -37,13 +39,13 @@ endif()
 
 message(DEBUG "libsndfile = ${LIBSNDFILE}")
 
-add_library(muse ${LIB_HEADERS} ${LIB_SOURCES})
+add_library(${MK_LIBRARY_NAME} ${LIB_HEADERS} ${LIB_SOURCES})
 
-# MUSE dependencies
-target_include_directories(muse
+# Library dependencies
+target_include_directories(${MK_LIBRARY_NAME}
 	PRIVATE "/usr/local/include"
 )
-target_link_libraries(muse
+target_link_libraries(${MK_LIBRARY_NAME}
 	PRIVATE ${LIBSNDFILE}
 )
 
@@ -52,6 +54,6 @@ set(TEST_SOURCES test/main.cpp)
 
 add_executable(test ${TEST_SOURCES})
 
-add_dependencies(test muse)
+add_dependencies(test ${MK_LIBRARY_NAME})
 
-target_link_libraries(test muse)
+target_link_libraries(test ${MK_LIBRARY_NAME})
