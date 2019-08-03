@@ -30,25 +30,25 @@ double SampleInfo::loudness() const {
 	return amplitudeToLoudness(amplitude);
 }
 
-void audioToText(const std::string& audioFilePath, const std::string& textFilePath) {
+bool audioToText(const std::string& audioFilePath, const std::string& textFilePath) {
 	if (audioFilePath == textFilePath) {
-		std::cerr << "soundToText(): audio and text file paths can't be the same: " << audioFilePath << std::endl;
-		return;
+		std::cerr << "Audio and text file paths can't be the same: " << audioFilePath << std::endl;
+		return false;
 	}
 
 	// open audio file for reading
 	SF_INFO info;
 	SNDFILE* in = sf_open(audioFilePath.c_str(), SFM_READ, &info);
 	if (!in) {
-		std::cerr << "soundToText(): Failed to open audio file: " << audioFilePath << std::endl;
-		return;
+		std::cerr << "Failed to open audio file: " << audioFilePath << std::endl;
+		return false;
 	}
 
 	// open text file for writing
 	std::ofstream o(textFilePath);
 	if (o.bad()) {
-		std::cerr << "soundToText(): Failed to open text file: " << textFilePath << std::endl;
-		return;
+		std::cerr << "Failed to open text file: " << textFilePath << std::endl;
+		return false;
 	}
 	o.precision(std::numeric_limits<double>::max_digits10);
 
@@ -59,9 +59,9 @@ void audioToText(const std::string& audioFilePath, const std::string& textFilePa
 	// iterate audio file's frames
 	for (sf_count_t i = 0; i < frames; ++i) {
 		if(sf_read_float(in, &samples[0], channels) != channels) {
-			std::cerr << "soundToText(): Failed to read audio frame @ pos " << i << std::endl;
+			std::cerr << "Failed to read audio frame @ pos " << i << std::endl;
 			std::cerr << "Error: " << sf_strerror(in) << std::endl;
-			return;
+			return false;
 		}
 
 		o << i << '\t';
@@ -74,6 +74,8 @@ void audioToText(const std::string& audioFilePath, const std::string& textFilePa
 	}
 
 	sf_close(in);
+	
+	return true;
 }
 
 bool scanMax(const std::string& inputFilePath, SampleInfo& max) {
@@ -81,7 +83,7 @@ bool scanMax(const std::string& inputFilePath, SampleInfo& max) {
 	SF_INFO info;
 	SNDFILE* in = sf_open(inputFilePath.c_str(), SFM_READ, &info);
 	if (!in) {
-		std::cerr << "scanMax(): Failed to open input file: " << inputFilePath << std::endl;
+		std::cerr << "Failed to open input file: " << inputFilePath << std::endl;
 		return false;
 	}
 
@@ -91,7 +93,7 @@ bool scanMax(const std::string& inputFilePath, SampleInfo& max) {
 	max.amplitude = 0.0;
 	for (sf_count_t i = 0; i < frames; ++i) {
 		if(sf_read_float(in, &samples[0], channels) != channels) {
-			std::cerr << "scanMax(): Failed to read audio frame @ pos " << i << std::endl;
+			std::cerr << "Failed to read audio frame @ pos " << i << std::endl;
 			std::cerr << "Error: " << sf_strerror(in) << std::endl;
 			return false;
 		}
@@ -109,29 +111,29 @@ bool scanMax(const std::string& inputFilePath, SampleInfo& max) {
 	return true;
 }
 
-void normalize(const std::string& inputFilePath, const std::string& outputFilePath, float peakLoudness) {
+bool normalize(const std::string& inputFilePath, const std::string& outputFilePath, float peakLoudness) {
 	if (inputFilePath == outputFilePath) {
-		std::cerr << "normalize(): Input and output file can't be the same: " << inputFilePath << std::endl;
-		return;
+		std::cerr << "Input and output file can't be the same: " << inputFilePath << std::endl;
+		return false;
 	}
 
 	if (peakLoudness > 0.0) {
-		std::cerr << "normalize(): peak value is out of range: " << peakLoudness << ", max peak value is 0 dB" << std::endl;
-		return;
+		std::cerr << "Peak value is out of range: " << peakLoudness << ", max peak value is 0 dB" << std::endl;
+		return false;
 	}
 
 	const float peakAmplitude = clamp(loudnessToAmplitude(peakLoudness), 0.0, 1.0);
 
 	if (std::isnan(peakAmplitude)) {
-		std::cerr << "normalize(): peak amplitude is too small" << std::endl;
-		return;
+		std::cerr << "Peak amplitude is too small" << std::endl;
+		return false;
 	}
 
 	// get input file's peak amplitude
 	SampleInfo max;
 	if (!scanMax(inputFilePath, max)) {
-		std::cerr << "normalize(): Failed to scan input file: " << inputFilePath << std::endl;
-		return;
+		std::cerr << "Failed to scan input file: " << inputFilePath << std::endl;
+		return false;
 	}
 
 	// calculate gain factor
@@ -141,8 +143,8 @@ void normalize(const std::string& inputFilePath, const std::string& outputFilePa
 	SF_INFO info;
 	SNDFILE* in = sf_open(inputFilePath.c_str(), SFM_READ, &info);
 	if (!in) {
-		std::cerr << "normalize(): Failed to open input file: " << inputFilePath << std::endl;
-		return;
+		std::cerr << "Failed to open input file: " << inputFilePath << std::endl;
+		return false;
 	}
 
 	const sf_count_t frames = info.frames;
@@ -151,20 +153,20 @@ void normalize(const std::string& inputFilePath, const std::string& outputFilePa
 	// open output file in write mode
 	SNDFILE* out = sf_open(outputFilePath.c_str(), SFM_WRITE, &info);
 	if (!out) {
-		std::cerr << "normalize(): Failed to open output file: " << outputFilePath << std::endl;
+		std::cerr << "Failed to open output file: " << outputFilePath << std::endl;
 		std::cerr << "Error: " << sf_strerror(out) << std::endl;
 		sf_close(in);
-		return;
+		return false;
 	}
 
 	std::vector<float> samples((size_t)channels);
 	for (sf_count_t i = 0; i < frames; ++i) {
 		if(sf_read_float(in, &samples[0], channels) != channels) {
-			std::cerr << "normalize(): Failed to read audio frame @ pos " << i << std::endl;
+			std::cerr << "Failed to read audio frame @ pos " << i << std::endl;
 			std::cerr << "Error: " << sf_strerror(in) << std::endl;
 			sf_close(in);
 			sf_close(out);
-			return;
+			return false;
 		}
 
 		// normalize audio frame
@@ -173,36 +175,38 @@ void normalize(const std::string& inputFilePath, const std::string& outputFilePa
 		}
 
 		if(sf_write_float(out, &samples[0], channels) != channels) {
-			std::cerr << "normalize(): Failed to write audio frame @ pos " << i << std::endl;
+			std::cerr << "Failed to write audio frame @ pos " << i << std::endl;
 			std::cerr << "Error: " << sf_strerror(out) << std::endl;
 			sf_close(in);
 			sf_close(out);
-			return;
+			return false;
 		}
 	}
 
 	sf_close(in);
 	sf_close(out);
+	
+	return true;
 }
 
-void amplify(const std::string& inputFilePath, const std::string& outputFilePath, float gain) {
+bool amplify(const std::string& inputFilePath, const std::string& outputFilePath, float gain) {
 	if (inputFilePath == outputFilePath) {
-		std::cerr << "amplify(): Input and output file can't be the same: " << inputFilePath << std::endl;
-		return;
+		std::cerr << "Input and output file can't be the same: " << inputFilePath << std::endl;
+		return false;
 	}
 
 	const float ratio = loudnessToAmplitude(gain);
 	if (std::isnan(ratio)) {
-		std::cerr << "amplify(): gain factor is too small" << std::endl;
-		return;
+		std::cerr << "Gain factor is too small" << std::endl;
+		return false;
 	}
 
 	// open input file
 	SF_INFO info;
 	SNDFILE* in = sf_open(inputFilePath.c_str(), SFM_READ, &info);
 	if (!in) {
-		std::cerr << "normalize(): Failed to open input file: " << inputFilePath << std::endl;
-		return;
+		std::cerr << "Failed to open input file: " << inputFilePath << std::endl;
+		return false;
 	}
 
 	const sf_count_t frames = info.frames;
@@ -211,20 +215,20 @@ void amplify(const std::string& inputFilePath, const std::string& outputFilePath
 	// open output file in write mode
 	SNDFILE* out = sf_open(outputFilePath.c_str(), SFM_WRITE, &info);
 	if (!out) {
-		std::cerr << "normalize(): Failed to open output file: " << outputFilePath << std::endl;
+		std::cerr << "Failed to open output file: " << outputFilePath << std::endl;
 		std::cerr << "Error: " << sf_strerror(out) << std::endl;
 		sf_close(in);
-		return;
+		return false;
 	}
 
 	std::vector<float> samples((size_t)channels);
 	for (sf_count_t i = 0; i < frames; ++i) {
 		if(sf_read_float(in, &samples[0], channels) != channels) {
-			std::cerr << "normalize(): Failed to read audio frame @ pos " << i << std::endl;
+			std::cerr << "Failed to read audio frame @ pos " << i << std::endl;
 			std::cerr << "Error: " << sf_strerror(in) << std::endl;
 			sf_close(in);
 			sf_close(out);
-			return;
+			return false;
 		}
 
 		// normalize audio frame
@@ -233,16 +237,18 @@ void amplify(const std::string& inputFilePath, const std::string& outputFilePath
 		}
 
 		if(sf_write_float(out, &samples[0], channels) != channels) {
-			std::cerr << "normalize(): Failed to write audio frame @ pos " << i << std::endl;
+			std::cerr << "Failed to write audio frame @ pos " << i << std::endl;
 			std::cerr << "Error: " << sf_strerror(out) << std::endl;
 			sf_close(in);
 			sf_close(out);
-			return;
+			return false;
 		}
 	}
 
 	sf_close(in);
 	sf_close(out);
+	
+	return true;
 }
 
 } // namespace mk

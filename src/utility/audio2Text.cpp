@@ -8,7 +8,5 @@ int main(int argc, char* argv[]) {
 	}
 	const std::string audioFilePath(argv[1]);
 	
-	mk::audioToText(audioFilePath, audioFilePath + ".txt");
-	
-	return 0;
+	return mk::audioToText(audioFilePath, audioFilePath + ".txt");
 }

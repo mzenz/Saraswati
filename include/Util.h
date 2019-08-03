@@ -15,19 +15,23 @@ struct SampleInfo {
 	double amplitude;
 };
 
-template<class T>
-T clamp(T n, T min, T max) { return std::min(std::max(n, min), max); }
+template<class T> T clamp(T n, T min, T max) { return std::min(std::max(n, min), max); }
 
 double amplitudeToLoudness(double amplitude);
 
 double loudnessToAmplitude(double loudness);
 
-void audioToText(const std::string& audioFilePath, const std::string& textFilePath);
+bool audioToText(const std::string& audioFilePath,
+				 const std::string& textFilePath);
 
 bool scanMax(const std::string& inputFilePath, SampleInfo& max);
 
-void normalize(const std::string& inputFilePath, const std::string& outputFilePath, float peakLoudness = 0.0);
+bool normalize(const std::string& inputFilePath,
+			   const std::string& outputFilePath,
+			   float peakLoudness = 0.0);
 
-void amplify(const std::string& inputFilePath, const std::string& outputFilePath, float gain);
+bool amplify(const std::string& inputFilePath,
+			 const std::string& outputFilePath,
+			 float gain);
 
 } // namespace mk

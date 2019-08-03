@@ -16,7 +16,5 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	mk::amplify(inputFilePath, outputFilePath, gain);
-
-	return 0;
+	return mk::amplify(inputFilePath, outputFilePath, gain);
 }
