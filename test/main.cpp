@@ -190,9 +190,23 @@ void writeSawWaveToAIFF() {
 
 void normalizeAudio() {
 	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized.aiff");
+	mk::audioToText("reference/wu-tang_normalized.aiff", "reference/wu-tang_normalized.txt");
+	mk::audioToText("reference/wu-tang.aiff", "reference/wu-tang.txt");
+}
+
+void printMaxSample() {
+	SampleInfo max;
+	mk::scanMax("reference/wu-tang.aiff", max);
+	std::cout << "scanMax(): " << std::endl;
+	std::cout << "frame: " << max.frame << std::endl;
+	std::cout << "channel: " << max.channel << std::endl;
+	std::cout << "amplitude: " << max.amplitude << std::endl;
+	std::cout << "loudness: " << max.loudness() << " dB" << std::endl;
 }
 
 int main(int argc, char* argv[]) {
+	cout.precision(std::numeric_limits<double>::max_digits10);
+
 	majorScale();
 	printFrequenciesOfAllMidiNotes();
 	printAllNotes();
@@ -205,4 +219,5 @@ int main(int argc, char* argv[]) {
 	writeSineWaveToAIFF();
 	writeSawWaveToAIFF();
 	normalizeAudio();
+	printMaxSample();
 }
