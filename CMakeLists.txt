@@ -24,6 +24,7 @@ set(LIB_SOURCES src/Note.cpp
 				src/Synthesis.cpp
 				src/AIFF.cpp
 				src/IEEEExtended.cpp
+				src/Util.cpp
 )
 
 find_library(LIBSNDFILE

@@ -15,9 +15,6 @@ class AIFF;
 
 struct AudioModule {
 	virtual double operator()(double time) const = 0;
-
-	// TODO: perform module-specific parameter validation
-//	virtual bool valid() const = 0;
 };
 
 struct SineWave : public AudioModule {
