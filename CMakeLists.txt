@@ -76,6 +76,16 @@ add_dependencies(audio2Text ${MK_LIBRARY_NAME})
 target_link_libraries(audio2Text ${MK_LIBRARY_NAME})
 
 ##################################################
+# amplify utility program
+##################################################
+
+add_executable(amplify utility/amplify.cpp)
+
+add_dependencies(amplify ${MK_LIBRARY_NAME})
+
+target_link_libraries(amplify ${MK_LIBRARY_NAME})
+
+##################################################
 # Install targets
 ##################################################
 
@@ -85,3 +95,4 @@ install(TARGETS ${MK_LIBRARY_NAME} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/$
 # Install binaries and utilities
 install(TARGETS test DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 install(TARGETS audio2Text DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+install(TARGETS amplify DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})

@@ -28,4 +28,6 @@ bool scanMax(const std::string& inputFilePath, SampleInfo& max);
 
 void normalize(const std::string& inputFilePath, const std::string& outputFilePath, float peakLoudness = 0.0);
 
+void amplify(const std::string& inputFilePath, const std::string& outputFilePath, float gain);
+
 } // namespace mk
