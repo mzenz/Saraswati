@@ -11,5 +11,5 @@ int main(int argc, char* argv[]) {
 	const std::string inputFilePath2(argv[2]);
 	const std::string outputFilePath(argv[3]);
 
-	return mk::mix(inputFilePath1, inputFilePath2, outputFilePath);
+	return !mk::mix(inputFilePath1, inputFilePath2, outputFilePath);
 }
