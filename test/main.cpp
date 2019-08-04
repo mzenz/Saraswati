@@ -188,19 +188,6 @@ void writeSawWaveToAIFF() {
 	}
 }
 
-void normalizeAudio() {
-	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_0dB.aiff");
-	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_-3dB.aiff", -3.0);
-	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_-12dB.aiff", -12.0);
-}
-
-void dumpAudioToText() {
-	mk::audioToText("reference/wu-tang.aiff", "reference/wu-tang.txt");
-	mk::audioToText("reference/wu-tang_normalized_0dB.aiff", "reference/wu-tang_normalized_0dB.txt");
-	mk::audioToText("reference/wu-tang_normalized_-3dB.aiff", "reference/wu-tang_normalized_-3dB.txt");
-	mk::audioToText("reference/wu-tang_normalized_-12dB.aiff", "reference/wu-tang_normalized_-12dB.txt");
-}
-
 void printMaxSample() {
 	SampleInfo max;
 	mk::scanMax("reference/wu-tang.aiff", max);
@@ -209,6 +196,26 @@ void printMaxSample() {
 	std::cout << "channel: " << max.channel << std::endl;
 	std::cout << "amplitude: " << max.amplitude << std::endl;
 	std::cout << "loudness: " << max.loudness() << " dB" << std::endl;
+}
+
+void normalizeAudio() {
+	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_0dB.aiff");
+	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_-3dB.aiff", -3.0);
+	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_-6dB.aiff", -6.0);
+	mk::normalize("reference/wu-tang.aiff", "reference/wu-tang_normalized_-12dB.aiff", -12.0);
+}
+
+void amplifyAudio() {
+	mk::amplify("reference/wu-tang_normalized_0dB.aiff", "reference/wu-tang_+3dB_gain.aiff", +3.0);
+	mk::amplify("reference/wu-tang_normalized_0dB.aiff", "reference/wu-tang_-6dB_gain.aiff", -6.0);
+}
+
+void dumpAudioToText() {
+	mk::audioToText("reference/wu-tang.aiff", "reference/wu-tang.txt");
+	mk::audioToText("reference/wu-tang_normalized_0dB.aiff", "reference/wu-tang_normalized_0dB.txt");
+	mk::audioToText("reference/wu-tang_normalized_-3dB.aiff", "reference/wu-tang_normalized_-3dB.txt");
+	mk::audioToText("reference/wu-tang_normalized_-6dB.aiff", "reference/wu-tang_normalized_-6dB.txt");
+	mk::audioToText("reference/wu-tang_normalized_-12dB.aiff", "reference/wu-tang_normalized_-12dB.txt");
 }
 
 int main(int argc, char* argv[]) {
@@ -225,7 +232,8 @@ int main(int argc, char* argv[]) {
 	writeSineWaveToFile();
 	writeSineWaveToAIFF();
 	writeSawWaveToAIFF();
-	normalizeAudio();
 	printMaxSample();
+	normalizeAudio();
+	amplifyAudio();
 	dumpAudioToText();
 }

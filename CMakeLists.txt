@@ -86,6 +86,16 @@ add_dependencies(amplify ${MK_LIBRARY_NAME})
 target_link_libraries(amplify ${MK_LIBRARY_NAME})
 
 ##################################################
+# mix utility program
+##################################################
+
+add_executable(mix src/utility/mix.cpp)
+
+add_dependencies(mix ${MK_LIBRARY_NAME})
+
+target_link_libraries(mix ${MK_LIBRARY_NAME})
+
+##################################################
 # Install targets
 ##################################################
 
@@ -96,3 +106,4 @@ install(TARGETS ${MK_LIBRARY_NAME} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/$
 install(TARGETS test DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 install(TARGETS audio2Text DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 install(TARGETS amplify DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+install(TARGETS mix DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
