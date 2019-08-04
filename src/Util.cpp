@@ -248,6 +248,49 @@ bool amplify(const std::string& inputFilePath, const std::string& outputFilePath
 	return true;
 }
 
+bool invertPhase(const std::string& inputFilePath, const std::string& outputFilePath) {
+	if (inputFilePath == outputFilePath) {
+		std::cerr << "Input and output file can't be the same: " << inputFilePath << std::endl;
+		return false;
+	}
+
+	// open input file
+	SNDFILE_RAII in(inputFilePath);
+	if (!in.valid()) {
+		std::cerr << "Failed to open input file: " << inputFilePath << std::endl;
+		return false;
+	}
+
+	// open output file in write mode
+	SNDFILE_RAII out(outputFilePath, in.info);
+	if (!out.valid()) {
+		std::cerr << "Failed to open output file: " << outputFilePath << std::endl;
+		std::cerr << "Error: " << out.error() << std::endl;
+		return false;
+	}
+
+	for (sf_count_t i = 0; i < in.info.frames; ++i) {
+		if(!in.fetchNextFrame()) {
+			std::cerr << "Failed to read audio frame @ pos " << i << std::endl;
+			std::cerr << "Error: " << in.error() << std::endl;
+			return false;
+		}
+
+		// apply gain to audio frame while avoiding dynamic range overflow
+		for (auto j = 0; j < in.info.channels; ++j) {
+			in.samples[j] *= -1.0;
+		}
+
+		if(!out.writeFrame(in.samples)) {
+			std::cerr << "Failed to write audio frame @ pos " << i << std::endl;
+			std::cerr << "Error: " << out.error() << std::endl;
+			return false;
+		}
+	}
+
+	return true;
+}
+
 bool mix(const std::string& inputFilePath1,
 		 const std::string& inputFilePath2,
 		 const std::string& outputFilePath,

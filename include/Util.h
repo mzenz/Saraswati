@@ -34,6 +34,9 @@ bool amplify(const std::string& inputFilePath,
 			 const std::string& outputFilePath,
 			 float gain);
 
+bool invertPhase(const std::string& inputFilePath,
+				 const std::string& outputFilePath);
+
 bool mix(const std::string& inputFilePath1,
 		 const std::string& inputFilePath2,
 		 const std::string& outputFilePath,

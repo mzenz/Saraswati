@@ -96,6 +96,16 @@ add_dependencies(amplify ${MK_LIBRARY_NAME})
 target_link_libraries(amplify ${MK_LIBRARY_NAME})
 
 ##################################################
+# Invert phase utility program
+##################################################
+
+add_executable(invert_phase src/utility/invert_phase.cpp)
+
+add_dependencies(invert_phase ${MK_LIBRARY_NAME})
+
+target_link_libraries(invert_phase ${MK_LIBRARY_NAME})
+
+##################################################
 # mix utility program
 ##################################################
 
@@ -117,4 +127,5 @@ install(TARGETS test DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_T
 install(TARGETS audio2Text DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 install(TARGETS normalize DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 install(TARGETS amplify DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+install(TARGETS invert_phase DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 install(TARGETS mix DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
