@@ -36,6 +36,8 @@ bool amplify(const std::string& inputFilePath,
 
 bool mix(const std::string& inputFilePath1,
 		 const std::string& inputFilePath2,
-		 const std::string& outputFilePath);
+		 const std::string& outputFilePath,
+		 double gain1 = 1.0,
+		 double gain2 = 1.0);
 
 } // namespace mk

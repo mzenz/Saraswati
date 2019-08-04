@@ -248,7 +248,11 @@ bool amplify(const std::string& inputFilePath, const std::string& outputFilePath
 	return true;
 }
 
-bool mix(const std::string& inputFilePath1, const std::string& inputFilePath2, const std::string& outputFilePath) {
+bool mix(const std::string& inputFilePath1,
+		 const std::string& inputFilePath2,
+		 const std::string& outputFilePath,
+		 double gain1,
+		 double gain2) {
 	if (inputFilePath1 == inputFilePath2) {
 		std::cerr << "Input files can't be the same: " << inputFilePath1 << std::endl;
 		return false;
@@ -286,8 +290,7 @@ bool mix(const std::string& inputFilePath1, const std::string& inputFilePath2, c
 		return false;
 	}
 
-	std::vector<float> samples(static_cast<size_t>(out.info.channels));
-	for (sf_count_t i = 0; i < out.info.frames; ++i) {
+	for (sf_count_t i = 0; i < outInfo.frames; ++i) {
 		if(!in1.fetchNextFrame()) {
 			std::cerr << "Failed to read audio frame @ pos " << i << std::endl;
 			std::cerr << "Error: " << in1.error() << std::endl;
@@ -304,7 +307,7 @@ bool mix(const std::string& inputFilePath1, const std::string& inputFilePath2, c
 		for (auto j = 0; j < out.info.channels; ++j) {
 			const float s1 = j < in1.samples.size() ? in1.samples[j] : 0.0f;
 			const float s2 = j < in2.samples.size() ? in2.samples[j] : 0.0f;
-			out.samples[j] = s1 + s2;
+			out.samples[j] = clamp(loudnessToAmplitude(gain1) * s1 + loudnessToAmplitude(gain2) * s2, -1.0, 1.0);
 		}
 
 		if(!out.writeFrame(out.samples)) {

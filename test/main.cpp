@@ -171,7 +171,7 @@ void writeSawWaveToAIFF() {
 
 	mk::SawWave sawWave(frequency);
 	sawWave._amplitude = volume;
-	mk::AIFF aiff("synthesis/ascending_saw_440Hz@48KHz.aif", BitDepth::BitDepth16, channels, sampleRate);
+	mk::AIFF aiff("synthesis/ascending_saw_440Hz@48KHz.aiff", BitDepth::BitDepth24, channels, sampleRate);
 	const double dt = 1.0 / sampleRate;
 	for (double t = 0.0; t < duration; t += dt) {
 		for (auto i = 0; i < aiff.channels(); ++i) {
@@ -180,7 +180,7 @@ void writeSawWaveToAIFF() {
 	}
 
 	sawWave._polarity = -1.0;
-	mk::AIFF aiff2("synthesis/descending_saw_440Hz@48KHz.aif", BitDepth::BitDepth16, duration, sampleRate);
+	mk::AIFF aiff2("synthesis/descending_saw_440Hz@48KHz.aiff", BitDepth::BitDepth24, duration, sampleRate);
 	for (double t = 0.0; t < duration; t += dt) {
 		for (auto i = 0; i < aiff.channels(); ++i) {
 			aiff2 << sawWave(t);
