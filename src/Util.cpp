@@ -42,6 +42,17 @@ struct SNDFILE_RAII {
 	std::vector<float> samples;
 };
 
+std::pair<double, double> constPowerPanPos(double position) {
+	mk::clamp(position, -1.0, 1.0);
+	constexpr double SQRT_2_OVER_2 = 0.707106781186548;
+	constexpr double PI_OVER_2 = 1.570796326794897;
+	const double pos = position * PI_OVER_2;
+	const double angle = pos * 0.5;
+	const double s = ::sin(angle);
+	const double c = ::cos(angle);
+	return std::make_pair(SQRT_2_OVER_2 * (s - c), SQRT_2_OVER_2 * (s + c));
+}
+
 } // namespace
 
 namespace mk {
@@ -354,6 +365,58 @@ bool mix(const std::string& inputFilePath1,
 		}
 
 		if(!out.writeFrame(out.samples)) {
+			std::cerr << "Failed to write audio frame @ pos " << i << std::endl;
+			std::cerr << "Error: " << out.error() << std::endl;
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool panStereoFile(const std::string& inputFilePath,
+				   const std::string& outputFilePath,
+				   double position) {
+	if (inputFilePath == outputFilePath) {
+		std::cerr << "Input and output files can't be the same: " << inputFilePath << std::endl;
+		return false;
+	}
+
+	// open 1st input file in read mode
+	SNDFILE_RAII in(inputFilePath);
+	if (!in.valid()) {
+		std::cerr << "Failed to open input file: " << inputFilePath << std::endl;
+		return false;
+	}
+
+	// make sure input file is stereo
+	if (in.info.channels != 2) {
+		std::cerr << "Input file '" << inputFilePath << "' has " << in.info.channels << " channel(s), you must pass a stereo input file" << std::endl;
+		return false;
+	}
+
+	// open output file in write mode
+	SF_INFO outInfo = in.info;
+	SNDFILE_RAII out(outputFilePath, outInfo);
+	if (!out.valid()) {
+		std::cerr << "Failed to open output file: " << outputFilePath << std::endl;
+		std::cerr << "Error: " << out.error() << std::endl;
+		return false;
+	}
+
+	const auto pannedStereoField = constPowerPanPos(position);
+	for (sf_count_t i = 0; i < outInfo.frames; ++i) {
+		if(!in.fetchNextFrame()) {
+			std::cerr << "Failed to read audio frame @ pos " << i << std::endl;
+			std::cerr << "Error: " << in.error() << std::endl;
+			return false;
+		}
+
+		// pan audio sample using constant power
+		in.samples[0] *= pannedStereoField.first;
+		in.samples[1] *= pannedStereoField.second;
+
+		if(!out.writeFrame(in.samples)) {
 			std::cerr << "Failed to write audio frame @ pos " << i << std::endl;
 			std::cerr << "Error: " << out.error() << std::endl;
 			return false;

@@ -43,4 +43,8 @@ bool mix(const std::string& inputFilePath1,
 		 double gain1 = 1.0,
 		 double gain2 = 1.0);
 
+bool panStereoFile(const std::string& inputFilePath,
+				   const std::string& outputFilePath,
+				   double position);
+
 } // namespace mk
