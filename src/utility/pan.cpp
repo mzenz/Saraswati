@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 
 	char* end;
 	double position = strtod(argv[3], &end);
-	if (argv[5] == end || position < -1.0 || position > 1.0) {
+	if (argv[3] == end || position < -1.0 || position > 1.0) {
 		std::cerr << "Incorrect position value: '" << argv[3] << "', pass a value between -1.0 and 1.0 dB" << std::endl;
 		return 1;
 	}
