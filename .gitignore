@@ -4,3 +4,8 @@
 build
 lib
 bin
+
+CMakeFiles
+CMakeCache.txt
+*.cmake
+Makefile
